@@ -23,26 +23,6 @@ class AgentResponse(BaseModel):
     answer: str = Field(description="The agent answer to the query")
     sources: List[Source] = Field(default_factory=list, description="List of source used to generate an answer")
 
-
-# @tool
-# def search(query: str) -> str:
-#     """
-#     Search for information on the web.
-
-#     Args:
-#         query: The search query
-
-#     Returns:
-#         The search result
-#     """
-
-#     print("Using TavilySearch tool.... ")
-#     print(f"Search result for {query}")
-#     result = TavilySearch().invoke(query)
-#     return str(result["results"])
-
-
-# llm = ChatOllama(model="qwen3:4b")
 llm = ChatOpenAI(
     model="nvidia/nemotron-3-ultra-550b-a55b:free",
     base_url="https://openrouter.ai/api/v1",
@@ -58,8 +38,6 @@ llm = ChatOpenAI(
     temperature=0,
 )
 
-# because TavilySearch() is already a tools, then we can immediat use it
-# tools = [search]
 tools = [TavilySearch()]
 agent = create_agent(model=llm, tools=tools, response_format=AgentResponse)
 
