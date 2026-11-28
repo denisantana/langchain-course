@@ -1,151 +1,144 @@
-# LangChain- Develop AI Agents with LangChain & LangGraph 🦜🔗
+# Job Search Agent — LangChain Project
 
-**Learn LangChain and LangGraph by building real world AI Agents (Python, Latest Version V.1.0+)**
+An AI agent that searches the web for real job postings and returns structured results — runnable as a CLI script or through a web UI.
 
-This course is designed to teach you how to QUICKLY harness the power of the LangChain library for LLM applications. Build 3 end-to-end working LangChain based generative AI applications with no fluff, no toy examples - just real projects using real APIs and real-world skills.
+Built while following the **LangChain & LangGraph AI Engineering course**
 
-![LangChain Logo](/static/LangChain_OSS%20Lockup_light.png)
-![LangGraph Logo](/static/LangGraph_OSS%20Lockup_light.png)
+## Features
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/EdenMarco177?style=social)](https://twitter.com/EdenMarco177)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+- 🔍 **Real web search** — the agent calls `TavilySearch` and answers only from real results (no fabricated postings)
+- 🧩 **Structured output** — results are parsed into a Pydantic schema (`JobPosting` + `Source`) via `create_agent(response_format=...)`
+- 🌐 **Two interfaces** — a CLI (`main.py`) and a web app (`app.py` + `index.html`)
+- 🎯 **Per-request configuration** — choose the job site (LinkedIn, Jobstreet, Glints, Kalibrr, Indeed, or any site) and the number of postings
+- � **Runs on free models** — uses OpenRouter free-tier models with automatic fallback routing
 
-[![udemy](https://img.shields.io/badge/LangChain%20Udemy%20Course%20Coupon%20%2414.99-brightgreen)](https://www.udemy.com/course/langchain/?couponCode=NOV-2026)
+## Tech Stack
 
+| Component | Tech |
+|---|---|
+| Agent framework | LangChain 1.x (`create_agent`) |
+| Search tool | `langchain-tavily` (Tavily API) |
+| LLM | OpenRouter (OpenAI-compatible) — `nvidia/nemotron-3-ultra-550b-a55b:free` with fallbacks |
+| Structured output | Pydantic schema via `ToolStrategy` |
+| Web backend | FastAPI + Uvicorn |
+| Frontend | Vanilla HTML/CSS/JS (no build step) |
+| Package manager | `uv` |
 
+## Project Structure
 
-## 💡 What You'll Build 
+```
+├── main.py        # CLI entrypoint — runs one hardcoded search and prints the result
+├── app.py         # FastAPI backend — serves the UI and POST /api/search
+├── index.html     # Web UI — query input, site dropdown, result count, job cards
+├── static/        # Static assets (logos)
+├── .env           # API keys (not committed)
+└── pyproject.toml # Dependencies (managed by uv)
+```
 
-This course takes you through building 7 real-world AI agent projects, from simple hello-world applications to advanced agentic systems:
+## Prerequisites
 
-| Project | Type | Description |
-|---------|------|-------------|
-| 👋 [LangChain Hello World](https://github.com/emarco177/langchain-course/tree/project/hello-world) | Branch (`project/hello-world`) | Your first AI agent - basic structure and LLM integration |
-| 🔎  [Modern Search Agent](https://github.com/emarco177/ice_breaker/tree/project/search-agent) | Branch (`project/search-agent`) | Build search agents using LangChain v.1's `create_agent` interface with custom tools, Tavily integration, and structured outputs |
-| 🧠 [Agents Under The Hood](https://github.com/emarco177/langchain-course/tree/project/agents-under-the-hood) | Branch (`project/agents-under-the-hood`) | Understanding reasoning and acting patterns in AI agents |
-| 📄 [RAG Gist](https://github.com/emarco177/langchain-course/tree/project/rag-gist) | Branch (`project/rag-gist`) | The gist of retrieval-augmented generation |
-| ⚡ [System One Models](https://github.com/emarco177/langchain-course/tree/project/system-one-models) | Branch (`project/system-one-models`) | Fast, calibrated harness decisions with Jev: model routing and auto-mode tool gating middleware |
-| 📚 [Documentation Helper](https://github.com/emarco177/documentation-helper) | External Repo | Intelligent documentation assistant |
-| 💻 [Code Interpreter](https://github.com/emarco177/langchain-course/tree/project/code-interpreter) | Branch (`project/code-interpreter`) | AI-powered code execution and analysis |
-| 🪞 [Reflection Agent](https://github.com/emarco177/langgraph-course/tree/project/reflection-agent) | External Repo | Self-improving agent with reflection and critique capabilities |
-| 🔄 [Reflexion Agent](https://github.com/emarco177/langgraph-course/tree/project/reflexion-agent) | External Repo | Advanced self-correcting agent using reflexion techniques |
-| 🤖 [Agentic RAG](https://github.com/emarco177/langgraph-course/tree/project/agentic-rag) | External Repo | Advanced retrieval-augmented generation system |
+- Python 3.14+ and [`uv`](https://docs.astral.sh/uv/)
+- API keys:
+  - **`TAVILY_API_KEY`** — get one at [tavily.com](https://tavily.com) (required — powers the search tool)
+  - **`OPENROUTER_API_KEY`** — get one at [openrouter.ai](https://openrouter.ai) (required — powers the LLM)
+  - Optional: `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `GROQ_API_KEY`, `OLLAMA_API_KEY`, `LANGSMITH_*` — only needed if you switch providers or enable LangSmith tracing
 
-## 📚 Course Highlights 
+## Setup
 
-- **7 Complete Projects** - From beginner to advanced implementations including Ice Breaker, Documentation Helper, and Code Interpreter
-- **Real-World Applications** - Build agents that solve actual problems with live APIs
-- **Modern Tech Stack** - LangChain v0.3+, LangGraph, Pinecone, FAISS, Streamlit
-- **Practical Skills** - Learn RAG, vector databases, prompt engineering, and agent workflows
-- **Interactive Learning** - Follow commits chronologically for step-by-step learning
+```bash
+git clone https://github.com/denisantana/langchain-course.git
+cd langchain-course
+uv sync
+```
 
-## 🤔 Learning Path 
+Create a `.env` file:
 
-### Phase 1: Foundations
-1. **Hello World Chain** - Basic agent structure and LLM integration
-2. **Code Interpreter** - Tool calling and code execution capabilities
+```bash
+TAVILY_API_KEY=tvly-...
+OPENROUTER_API_KEY=sk-or-v1-...
+```
 
-### Phase 2: Real-World Applications
-3. **Ice Breaker** - Data collection and social media integration
-4. **Documentation Helper** - RAG implementation and knowledge management
+## How to Run
 
-### Phase 3: Advanced Concepts
-5. **Blog Analyzer** - Multi-step reasoning and content analysis
-6. **Agentic RAG** - Self-correcting agents with memory and planning
+### CLI
 
-## ▶️ Getting Started 
+```bash
+uv run python main.py
+```
 
-### 🛠️ Prerequisites 
-- **This is not a beginner course** - Basic software engineering concepts needed
-- Familiarity with: git, Python, environment variables, classes, testing and debugging
-- Python 3.10+
-- Any Python package manager (uv, poetry, pipenv) - but NOT conda!
-- Access to an LLM (can be open source via Ollama, or cloud providers like OpenAI, Anthropic, Gemini)
-- No Machine Learning experience needed
+Runs a fixed search ("AI engineer jobs that mention LangChain in Jakarta on LinkedIn") and prints the full agent state — messages, tool calls, and the final `structured_response`.
 
-### ⚙️ Setup Instructions 
+### Web App
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/emarco177/langchain-course
-   cd langchain-course
-   ```
-2. **Choose your learning path**
-   
-   **For branch-based projects:**
-   ```bash
-   # Start with Hello World
-   git checkout project/hello-world
-   uv sync
-   uv run python main.py
-   
-   # Progress to Code Interpreter
-   git checkout project/code-interpreter
-   uv sync
-   uv run python main.py
-   ```
-   
-   **For external repository projects:**
-   ```bash
-   # Clone specific project repositories
-   git clone https://github.com/emarco177/ice_breaker
-   cd ice_breaker
-   # Follow project-specific setup instructions
-   ```
+```bash
+uv run uvicorn app:app --port 8001 --reload
+```
 
-3. **Follow the commits**
-   - Each commit represents a lesson or feature implementation
-   - Use `git log --oneline` to see the learning progression
-   - Checkout previous commits to understand the development process
+Open http://127.0.0.1:8001 in your browser.
 
-**External Projects:**
-- [Ice Breaker](https://github.com/emarco177/ice_breaker) - Social media profile analyzer
-- [Medium Analyzer](https://github.com/emarco177/blog-analyzer) - Content analysis and insights generator
-- [Documentation Helper](https://github.com/emarco177/documentation-helper) - AI documentation assistant
-- [Reflection Agent](https://github.com/emarco177/langgraph-course/tree/project/reflection-agent) - Self-improving agent with reflection and critique capabilities
-- [Reflexion Agent](https://github.com/emarco177/langgraph-course/tree/project/reflexion-agent) - Advanced self-correcting agent using reflexion techniques
-- [Agentic RAG](https://github.com/emarco177/langgraph-course/tree/project/agentic-rag) - Advanced retrieval-augmented generation system
+## How to Use the Web UI
 
+1. **What are you looking for?** — free text, e.g. `AI engineer jobs that mention LangChain, located in Jakarta Indonesia`
+2. **Job site** — restrict results to `linkedin.com`, `jobstreet.co.id`, `glints.com`, `kalibrr.com`, `indeed.com`, or select *Any site*
+3. **Number of postings** — 1–10
+4. Click **Search** — results take ~30–60s (the agent calls Tavily, then structures the output). Each job renders as its own card with title, company, location, requirements, and a link to the posting. Raw sources are in a collapsible section below.
 
-## 📚 Learning Objectives 
+### API
 
-By the end of this course, you'll be able to:
+```bash
+curl -X POST http://127.0.0.1:8001/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "AI engineer jobs that mention LangChain in Jakarta Indonesia",
+       "site": "linkedin.com",
+       "count": 3}'
+```
 
-- Build AI agents from scratch using modern frameworks
-- Implement tool calling and external API integrations
-- Create RAG systems with vector databases
-- Design multi-step reasoning workflows
-- Deploy agents to production environments
-- Handle error correction and self-improvement in agents
-- Optimize agent performance and cost efficiency
+Response shape:
 
+```json
+{
+  "answer": "Found 3 AI engineer job postings in Jakarta ...",
+  "jobs": [
+    {
+      "title": "AI Engineer",
+      "company": "ATI Business Group",
+      "location": "Central Jakarta, Indonesia",
+      "requirements": "Practical experience with LangGraph, LangChain, ...",
+      "url": "https://www.linkedin.com/jobs/view/..."
+    }
+  ],
+  "sources": [{ "title": "...", "url": "..." }]
+}
+```
 
+## How It Works
 
+```
+User query ──► create_agent(llm, tools=[TavilySearch], response_format=AgentResponse)
+                  │
+                  ├─► LLM decides to call tavily_search(query, include_domains=[site])
+                  ├─► Tavily returns real search results
+                  └─► LLM emits an AgentResponse tool call (answer + jobs + sources)
+```
 
+- `tools=[TavilySearch(max_results=count*2, include_domains=[site])]` — built per request so the site/count options apply
+- `response_format=AgentResponse` uses the default `ToolStrategy`: the model "calls" the schema as a tool to produce validated structured output
+- LLM requests go through `ChatOpenAI` pointed at `https://openrouter.ai/api/v1`, with a `models` fallback list so free-tier rate limits auto-failover
+- `temperature=0`, `max_tokens=4096` for deterministic, non-truncated output
 
-## 🙏 Acknowledgements 
+### Switching models / providers
 
-Big thanks to the **LangChain / LangGraph** team and their excellent [documentation and tutorials](https://langchain-ai.github.io/langgraph/tutorials/introduction/) that make this course possible.
+- **Other OpenRouter model**: change the `model=` slug in `app.py` / `main.py`. Find free tool-capable models with:
+  ```bash
+  curl -s https://openrouter.ai/api/v1/models | jq -r \
+    '.data[] | select(.id | endswith(":free")) | select(.supported_parameters | index("tools")) | .id'
+  ```
+- **Local Ollama**: replace `ChatOpenAI` with `ChatOllama(model="qwen3:4b")` (remove `base_url`/`api_key`). Note: small local models may skip tool calls or produce malformed structured output.
 
-## 🌟 Support
+## Credits
 
-If you find this project helpful, please consider:
-- ⭐ Starring the repository
-- 🐛 Reporting issues
-- 💡 Contributing improvements
-- 📢 Sharing with others
-
----
-
-<div align="center">
-
-### 🔗 Connect with Me
-
-[![Portfolio](https://img.shields.io/badge/Portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://www.udemy.com/course/langchain/?referralCode=D981B8213164A3EA91AC)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/eden-marco/)
-[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/EdenEmarco177)
-
-**Built with ❤️ by Eden Marco**
-
-</div>
+- **LangChain / LangGraph** — agent framework and docs
+- **Tavily** — web search API
+- **OpenRouter** — LLM gateway providing the free models used here
+- **FastAPI / Uvicorn / Pydantic** — web backend and schemas
 
